@@ -1,5 +1,6 @@
-import cfbd
+import json
 import os
+import cfbd
 from typing import Any
 
 def get_records(year: int) -> None:
@@ -55,3 +56,44 @@ def _compute_win_loss_ratio(teamname: str) -> float:
         raise ValueError(f"{teamname} was not found")
     conference_games_data = team_data[idx].partition('conference_games=TeamRecord(')[2].split(')')[0]
     return float(int(conference_games_data.partition('wins=')[2].split(",")[0])/int(conference_games_data.partition('games=')[2].split(",")[0]))
+
+def generate_conference_rank_json(conferences: list, write = False, write_path = "conference_team_ranks.json") -> dict:
+    assert conferences != []
+    # Generates a dictionary of the structure:
+    # {
+    #   "SEC" : ["Alabama", "Missouri", ...],
+    #   "Big 12" : ["Iowa State", "Kansas", ...],
+    #   ...
+    # }
+    conference_team_map = {
+        conference : get_conference_teams(conference) for conference in conferences
+    }
+    # Generates a dictionary of the structure:
+    # {
+    #       "SEC" : {
+    #           "Alabama" : 1.0,
+    #           "Georgia" : 0.87,
+    #           ...
+    #       },
+    #       "Big Ten" : {
+    #           "Ohio State" : 1.0,
+    #           "Michigan" : 0.89,
+    #           ...
+    #       },
+    #       ...
+    # }
+    conference_team_score_map = {}
+    for conference in conferences:
+        preprocessed_conference = preprocess_conference(conference_team_map[conference])
+        conference_team_score_map[conference] = {
+            processed_team[0] : processed_team[1] for processed_team in preprocessed_conference
+        }
+    if write:
+        with open(write_path, "w+", encoding = "utf-8") as f:
+            json.dump(
+                obj = conference_team_score_map,
+                fp = f,
+                indent = 4
+            )
+
+    return conference_team_score_map
