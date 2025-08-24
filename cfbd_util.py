@@ -1,7 +1,7 @@
 import json
 import os
-import cfbd
 from typing import Any
+import cfbd
 
 def get_records(year: int) -> None:
     configuration = cfbd.Configuration(
@@ -97,3 +97,6 @@ def generate_conference_rank_json(conferences: list, write = False, write_path =
             )
 
     return conference_team_score_map
+
+def compute_points_for_winner(loser_rank: float, winner_rank: float) -> float:
+    return loser_rank/winner_rank
