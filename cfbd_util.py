@@ -5,7 +5,7 @@ import cfbd
 
 def get_records(year: int) -> None:
     configuration = cfbd.Configuration(
-        access_token = os.environ["API_KEY"]
+        access_token = os.getenv("API_KEY")
     )
     api_client = cfbd.ApiClient(configuration)
     instance = cfbd.GamesApi(api_client)
@@ -14,7 +14,7 @@ def get_records(year: int) -> None:
 
 def get_games(year: int, team: str):
     configuration = cfbd.Configuration(
-        access_token = os.environ["API_KEY"]
+        access_token = os.getenv("API_KEY")
     )
     api_client = cfbd.ApiClient(configuration)
     instance = cfbd.GamesApi(api_client)
@@ -100,3 +100,26 @@ def generate_conference_rank_json(conferences: list, write = False, write_path =
 
 def compute_points_for_winner(loser_rank: float, winner_rank: float) -> float:
     return loser_rank/winner_rank
+
+def write_games_data(team, conference) -> None:
+    cf_map = {
+        "Big Ten" : "Big_Ten",
+        "Big 12" : "Big_12",
+        "ACC" : "ACC",
+        "SEC" : "SEC"
+    }
+    write_response(f"game_stats/{cf_map[conference]}_{team}_gamedata.txt", get_games(2024, team))
+
+def write_all_games_data(conferences: list):
+    with open("conference_team_ranks.json", "r", encoding = "utf-8") as f:
+        conference_rank_data = json.load(f)
+
+    for conference in conferences:
+        assert isinstance(conference_rank_data[conference], dict)
+        for team in conference_rank_data[conference].keys():
+            write_games_data(team, conference)
+
+def process_games(team, team_rank, team_conference) -> float:
+    '''
+    Iterate overall games played by a team and compute the points earned for interconference play (if any).
+    '''
