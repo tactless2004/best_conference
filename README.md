@@ -4,14 +4,14 @@ Conference strength is one of the most debated topics in college football, but i
 
 ### Ranking within Conferences
 
-To assess the value of individual wins, I first ranked each team within its respective conference based on intra-conference performance. This provides a relative measure of team strength within each league. The idea is that a win over a top-tier team carries more weight than a win over a bottom-tier one. So, if a lower-ranked team in Conference A beats a high-ranked team in Conference B, that result is treated as more impactful than the reverse. This method does assume some equivalence between similarly ranked teams across conferences—for example, that the No. 1 team in Conference A is roughly comparable in strength to the No. 1 team in Conference B—though that isn’t always the case. As a next step, I plan to explore more precise ways to evaluate the impact of individual wins. The rankings are then normalized to allow fair comparison across conferences.
+To assess the value of individual wins, I first ranked each team within its respective conference based on intra-conference performance. This provides a relative measure of team strength within each league. The idea is that a win over a top-tier team carries more weight than a win over a bottom-tier one. So, if a lower-ranked team in Conference A beats a high-ranked team in Conference B, that result is treated as more impactful than the reverse. This method does assume some equivalence between similarly ranked teams across conferences, for example, that the No. 1 team in Conference A is roughly comparable in strength to the No. 1 team in Conference B, though that isn’t always the case. As a next step, I plan to explore more precise ways to evaluate the impact of individual wins. The rankings are then normalized to allow fair comparison across conferences.
 
-![[docs/Preprocessing Step.png]]
+![preprocessing step image](https://github.com/tactless2004/best_conference/blob/main/docs/Preprocessing%20Step.png)
 
 $$\text{Norm Rank} = \frac{1}{n^{\alpha}}$$
 $$\text{Norm Rank} \in (0,1] \subset \mathbb{R}$$
 
-**Aside**: $\alpha$ is a smoothing factor to avoid rapid decrease in the Normalized Rank. Should $\alpha = 1$ (as would be the case if no $\alpha$ was used) then the decrease would be $1, 0.5, 0.25, ...$. This is too drastic and will make later calculations less meaningful. I found experimentally that $\alpha = 0.5$ worked well.
+**Aside**: $\alpha$ is a smoothing factor to avoid rapid decrease in the Normalized Rank. Should $\alpha = 1$ (as would be the case if no $\alpha$ was used) then the decrease would be 1, 0.5, 0.25, ... This is too drastic and will make later calculations less meaningful. I found experimentally that $\alpha = 0.5$ worked well.
 
 #### Ranking Results:
 
@@ -106,7 +106,8 @@ $$\text{Norm Rank} \in (0,1] \subset \mathbb{R}$$
 
 With normalized team rankings established, the next step is to score each game by comparing the ranks of the winner and loser. To prevent double counting, only the winner’s points contribute to their conference’s total score.
 
-$$\text{Points for Winner} = \frac{\text{rank}_{\text{loser}}}{\text{rank}_{\text{winner}}}$$
+Points for Winner = rank of loser/rank of winner
+
 This formula rewards upsets. Wins by lower-ranked teams over higher-ranked ones carry more weight, while expected wins by top teams over weaker opponents contribute less.
 
 A known limitation is the assumption that similarly ranked teams across conferences are equally strong, which may not always be accurate. Refinements to this will be explored in future work.
@@ -117,8 +118,7 @@ The results of this analysis rank the conferences as follows: SEC first, followe
 
 With the 2025 college football season just around the corner, I’m excited to see how this year’s interconference matchups will impact these rankings.
 
-![[docs/Final Results Plot.png]]
-
+![final results image](https://github.com/tactless2004/best_conference/blob/main/docs/Final%20Results%20Plot.png)
 ### Future Work and Acknowledgements
 
 The [College Football Data API](https://collegefootballdata.com/) provided the historical game data used for this analysis.
