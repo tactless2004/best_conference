@@ -177,10 +177,9 @@ def score_game(team: str, game_data: str, opponent_conferences: list) -> float:
     return 0.0
 def process_games(team, team_conference) -> float:
     '''
-    Iterate overall games played by a team and compute the points earned for interconference play (if any).
+    Iterate overall games played by a team and,
+    compute the points earned for interconference play (if any).
     '''
-    # This should be done in a different way in future work, reading the whole json, to use one line in it
-    # over and over again is poor form.
     total_score = 0.0
 
     opponent_conferences = list(
@@ -201,3 +200,18 @@ def process_games(team, team_conference) -> float:
         total_score += score_game(team, game_data, opponent_conferences)
 
     return total_score
+
+def process_all_teams(conferences: list) -> dict:
+    '''
+    Process all teams games for each conference and determine conference ranks
+    '''
+    conference_ranks = {}
+    conference_rank_data = generate_conference_rank_json(conferences)
+    for conference in conferences:
+        conf_score = 0.0
+        assert isinstance(conference_rank_data[conference], dict)
+        for team in conference_rank_data[conference].keys():
+            conf_score += process_games(team, conference)
+        conference_ranks[conference] = conf_score
+
+    return conference_ranks
