@@ -119,6 +119,14 @@ The results of this analysis rank the conferences as follows: SEC first, followe
 With the 2025 college football season just around the corner, I’m excited to see how this year’s interconference matchups will impact these rankings.
 
 ![final results image](https://github.com/tactless2004/best_conference/blob/main/docs/Final%20Results%20Plot.png)
+
+| Conference | Value      |
+|------------|-----------:|
+| SEC        | 20.0501    |
+| ACC        | 8.2120     |
+| Big Ten    | 16.9743    |
+| Big 12     | 6.4804     |
+
 ### Future Work and Acknowledgements
 
 The [College Football Data API](https://collegefootballdata.com/) provided the historical game data used for this analysis.
